@@ -241,6 +241,12 @@ void handleHTTP(websocketpp::connection_hdl handler) {
     if(!documentRoot.empty()) {
         resource = documentRoot + resource;
     }
+    if(settings::getMode() == settings::AppModeChrome && con->get_resource() == "/__neutralino_chrome_bootstrap") {
+        con->set_status(websocketpp::http::status_code::ok);
+        con->replace_header("Content-Type", "text/html");
+        con->set_body("<!doctype html><title>Loading...</title>");
+        return;
+    }
     fs::FileReaderOptions fileReaderOptions =
         __getFileReaderOptionsFromHeaders(con->get_request().get_headers());
     router::Response routerResponse = router::serve(resource, fileReaderOptions);

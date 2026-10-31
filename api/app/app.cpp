@@ -1,4 +1,5 @@
 #include <iostream>
+#include <atomic>
 #include <string>
 
 #if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
@@ -12,6 +13,7 @@
 
 #include "lib/json/json.hpp"
 #include "settings.h"
+#include "chrome.h"
 #include "helpers.h"
 #include "errors.h"
 #include "server/neuserver.h"
@@ -26,6 +28,9 @@ using json = nlohmann::json;
 namespace app {
 
 void exit(int code) {
+    static atomic_flag exiting = ATOMIC_FLAG_INIT;
+    if(exiting.test_and_set()) return;
+    if(settings::getMode() == settings::AppModeChrome) chrome::close();
     if(neuserver::isInitialized()) {
         neuserver::stop();
     }

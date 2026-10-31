@@ -246,6 +246,15 @@
             {
               "type": "object",
               "properties": {
+                "exitProcessOnClose": {
+                  "type": "boolean",
+                  "default": true,
+                  "description": "When false, defer Chrome page close and emit windowClose while the app remains alive. Call app.exit after saving. Requires the framework DevTools close controller."
+                },
+                "userDataDir": {
+                  "type": "string",
+                  "description": "Private Chrome profile directory. Defaults to the application data directory's .tmp/chromedata. Do not share a running profile between application instances."
+                },
                 "width": {
                   "type": "integer",
                   "description": "Width of the chrome window."
